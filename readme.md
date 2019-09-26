@@ -7,3 +7,4 @@ These experiments are based on  [this great article](https://www.smashingmagazin
 ## Live links
 
 - [Pretrained model](https://gravida.pro/labs/tensorflowjs-experiments/pretrained-model/index.html)
+- [Transfer learning](https://gravida.pro/labs/tensorflowjs-experiments/transfer-learning/index.html)
