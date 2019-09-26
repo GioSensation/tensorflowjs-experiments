@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cat detection</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"></script>
+</head>
+<body>
+
+<div id="container"></div>
+
+<script>
+    const getImgEl = async () => {
+        const imgUrl = await fetch('https://loremflickr.com/600/350/pet').then(response => response.url);
+        const imgEl = document.createElement('img');
+        imgEl.src = imgUrl;
+        imgEl.id = 'image';
+        imgEl.crossOrigin = 'anonymous';
+        return imgEl;
+    };
+
+    const getResultEl = ({className, probability}) => {
+        const liEl = document.createElement('li');
+        liEl.textContent = `${className}: (probability: ${probability.toFixed(4)})`;
+        return liEl;
+    };
+
+    const getResultBlock = predictions => {
+        const ulEl = document.createElement('ul');
+        const fragment = new DocumentFragment();
+        predictions.forEach(prediction => fragment.appendChild(getResultEl(prediction)));
+        ulEl.appendChild(fragment);
+        return ulEl;
+    };
+
+    const getPredictions = async (img) => {
+        console.log("Model loading...");
+        const model = await mobilenet.load();
+        console.log("Model is loaded!");
+
+        return await model.classify(img);
+    };
+
+    window.addEventListener('load', async () => {
+        const container = document.getElementById('container');
+
+        const imgEl = await getImgEl();
+        container.appendChild(imgEl);
+
+        const predictions = await getPredictions(imgEl);
+
+        const titleEl = document.createElement('h1');
+        titleEl.textContent = 'Image detection';
+        container.appendChild(titleEl);
+        container.appendChild(getResultBlock(predictions));
+    });
+</script>
+</body>
+</html>
